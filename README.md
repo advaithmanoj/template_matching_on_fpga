@@ -2,7 +2,9 @@
 
 A hardware implementation of a **Template Matching System** using the **Sum of Absolute Differences (SAD)** algorithm on a **Xilinx Artix-7 (Nexys 4 DDR)** FPGA.
 
-The project accelerates template matching by implementing a **40-element systolic processing array** in Verilog, enabling parallel comparison of a binary template against a source image. MATLAB is used for image preprocessing, while Vivado is used for synthesis, implementation, and FPGA deployment.
+We used a **40-element systolic processing array** in Verilog, enabling parallel comparison of a binary template against a source image. MATLAB is used for image preprocessing, while Vivado is used for synthesis, implementation, and FPGA deployment.
+
+> **Note:** The high-level architecture used here is adapted from the reference paper by **T. Adiono et al.** The hardware implementation, Xilinx-compatible modules, integration, synthesis, verification, and FPGA deployment in this repository were developed as part of this project.
 
 ---
 
@@ -36,6 +38,7 @@ This project accelerates the process by implementing the matching algorithm comp
 ## Hardware
 
 - Nexys 4 DDR Development Board
+  ![Nexys 4 DDR](images/Nexys%204%20DDR.jpeg)
 - Xilinx Artix-7 FPGA (XC7A100T)
 - VGA Monitor
 - USB Programming Cable
@@ -137,6 +140,47 @@ Minimum SAD Detection
 ---
 
 ## Results
+<p align="center">
+  <img src="images/input1.png" width="38%">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="images/template1.png" width="10%">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="images/match1.jpeg" width="38%">
+</p>
+
+<p align="center">
+<b>Input Image 1</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<b>Template 1</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<b>Detection Result 1</b>
+</p>
+<p align="center">
+  <img src="images/input2.jpeg" width="38%">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="images/template2.jpeg" width="10%">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="images/match2.jpeg" width="38%">
+</p>
+
+<p align="center">
+<b>Input Image 2</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<b>Template 2</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<b>Detection Result 2</b>
+</p>
+
+<p align="center">
+  <img src="images/input3.jpg" width="38%">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="images/template3.jpg" width="10%">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="images/match3.jpeg" width="38%">
+</p>
+
+<p align="center">
+<b>Input Image 3</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<b>Template 3</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<b>Detection Result 3</b>
+</p>
+
 
 - Successfully implemented on **Xilinx Artix-7 FPGA**
 - Parallel template matching using 40 Processing Elements
@@ -153,21 +197,6 @@ Minimum SAD Detection
 - Higher image resolutions
 - AXI/APB interface integration
 - Real-time video processing
-
----
-
-## Skills Demonstrated
-
-- Verilog RTL Design
-- FPGA Design
-- Vivado
-- MATLAB
-- Digital System Design
-- Computer Vision Hardware Acceleration
-- Systolic Array Design
-- BRAM Utilization
-- VGA Controller Design
-- Hardware Verification
 
 ---
 
