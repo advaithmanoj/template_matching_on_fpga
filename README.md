@@ -10,9 +10,9 @@ We used a **40-element systolic processing array** in Verilog, enabling parallel
 
 ## Overview
 
-Template matching is a common computer vision technique used to locate an object inside a larger image. Traditional software implementations are computationally expensive because every possible window must be compared sequentially.
+Template matching is a common computer vision technique used to locate an object inside a larger image.
 
-This project accelerates the process by implementing the matching algorithm completely in hardware using:
+This project accelerates this process by implementing the matching algorithm completely in hardware using:
 
 - Binary Sum of Absolute Differences (SAD)
 - Parallel Processing Elements (PEs)
