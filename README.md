@@ -68,33 +68,11 @@ This project accelerates this process by implementing the matching algorithm com
 
 ## System Architecture
 
-```
-Source Image
-      │
-      ▼
-MATLAB Preprocessing
-(Grayscale + Binarization)
-      │
-      ▼
-input_image.bin
-template.mem
-      │
-      ▼
-FPGA Block RAM
-      │
-      ▼
-40-PE Systolic Array
-      │
-      ▼
-Binary Tree Adder
-      │
-      ▼
-Minimum SAD Detection
-      │
-      ├────────► Seven Segment Display
-      ▼
- VGA Output
-```
+<img width="1759" height="894" alt="project overflow" src="https://github.com/user-attachments/assets/9918e461-36c9-4727-b86c-c2e0665f3a04" />
+
+
+
+
 
 ---
 
@@ -208,7 +186,7 @@ Minimum SAD Detection
 
 ## Author
 
-**Advaith Manoj**
+**Advaith Manoj** &  **Akarsh Sharma** 
 
 Electrical & Electronics Engineering  
 Manipal Institute of Technology
