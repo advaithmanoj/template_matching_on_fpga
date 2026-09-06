@@ -110,17 +110,6 @@ module linebuffer (clk, rst, ena, tarray, iarray, valid, xpos, ypos, mark);
          valid <= !((xpos < 10'd40) | (ypos < 10'd100));
 
 
-//    old code        if (xpos == 10'd639) begin 
-//                xpos <= 10'd0;
-//                if (ypos == 10'd479)
-//                    ypos <= 10'd0;
-//                else
-//                    ypos <= ypos + 10'd1;
-//            end
-//            else
-//                xpos <= xpos + 10'd1;
-            
-//            valid <= !((xpos < 10'd40) | (ypos < 10'd100));  //valid only when inisde
         end
     end
 
