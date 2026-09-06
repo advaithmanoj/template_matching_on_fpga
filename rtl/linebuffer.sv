@@ -41,14 +41,14 @@ module linebuffer (clk, rst, ena, tarray, iarray, valid, xpos, ypos, mark);
     output reg mark = 1'd1;
     
     // Addressing input to ROM
-    reg [5:0] taddr = 6'd0;
+    reg [5:0] taddr = 6'd0;  //for counting 0 to 39
     
-    // Reverse clken
+ 
     wire clken; 
     
-    assign clken = ena;  //
+    assign clken = ena; 
 
-    wire [18:0] col_base = ({1'b0, xpos, 8'b0}
+    wire [18:0] col_base = ({1'b0, xpos, 8'b0}   //col_base = xpos × (256 + 128 + 64 + 32)
                           + {2'b0, xpos, 7'b0}
                           + {3'b0, xpos, 6'b0}
                           + {4'b0, xpos, 5'b0});
@@ -85,7 +85,7 @@ module linebuffer (clk, rst, ena, tarray, iarray, valid, xpos, ypos, mark);
         end
         else
         if (ena) begin
-            // Template address pointer
+            // Template address pointer (40 counter)
             if (taddr == 6'd39) begin
                 taddr <= 6'd0;
                 mark <= 1'd1;
@@ -106,7 +106,7 @@ module linebuffer (clk, rst, ena, tarray, iarray, valid, xpos, ypos, mark);
                   end else
                       xpos <= xpos + 10'd1;
 
-// Template is 40 columns wide and 100 rows tall.
+         // Template is 40 columns wide and 100 rows tall.
          valid <= !((xpos < 10'd40) | (ypos < 10'd100));
 
 
