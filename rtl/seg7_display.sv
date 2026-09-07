@@ -1,24 +1,5 @@
 `timescale 1ns/1ps
-// =============================================================
-// seg7_display.sv  -  7-segment display driver  (Nexys A7-100T)
-//
-// Displays match position in DECIMAL on the 8-digit display.
-//
-// Layout (left → right):
-//   an[7]        blank
-//   an[6..4]     ypos (column, 0-639) in decimal  e.g. "040"
-//   an[3]        blank separator
-//   an[2..0]     xpos (row,    0-479) in decimal  e.g. "100"
-//
-// Before match_found = 1, all digits are blank.
-//
-// BCD conversion: double-dabble (shift-and-add-3), fully combinatorial.
-// Refresh: 50 MHz / 50 000 = 1 kHz per digit → 125 Hz full scan.
-//
-// Segment mapping (seg[6:0], ACTIVE-LOW):
-//   seg[0]=CA  seg[1]=CB  seg[2]=CC  seg[3]=CD
-//   seg[4]=CE  seg[5]=CF  seg[6]=CG
-// =============================================================
+
 module seg7_display (
     input  wire        clk,         // 50 MHz system clock
     input  wire        rst,         // active-low synchronous reset
@@ -29,12 +10,7 @@ module seg7_display (
     output reg  [6:0]  seg          // segment cathodes, ACTIVE-LOW
 );
 
-    // ------------------------------------------------------------------
-    // Binary → BCD  (double-dabble, 10-bit input → 12-bit BCD)
-    //   bcd[11:8] = hundreds   bcd[7:4] = tens   bcd[3:0] = units
-    // Vivado unrolls the for-loop into ~10 levels of add-3+shift logic.
-    // No DSP blocks used.
-    // ------------------------------------------------------------------
+ 
     function automatic [11:0] bin_to_bcd;
         input [9:0] bin;
         integer i;
@@ -54,9 +30,7 @@ module seg7_display (
     wire [11:0] xbcd = bin_to_bcd(xpos);   // [11:8]=H [7:4]=T [3:0]=U
     wire [11:0] ybcd = bin_to_bcd(ypos);
 
-    // ------------------------------------------------------------------
-    // Digit refresh counter
-    // ------------------------------------------------------------------
+
     reg [15:0] div_cnt;
     reg [2:0]  sel;
 
@@ -72,9 +46,7 @@ module seg7_display (
         end
     end
 
-    // ------------------------------------------------------------------
-    // Digit data mux  (decimal BCD digits, 0-9)
-    // ------------------------------------------------------------------
+
     reg [3:0] nibble;
     reg       show_blank;
 
@@ -94,18 +66,13 @@ module seg7_display (
         endcase
     end
 
-    // ------------------------------------------------------------------
-    // Anode: one-cold (active-LOW)
-    // ------------------------------------------------------------------
+
     always @(posedge clk) begin
         if (!rst) an <= 8'hFF;
         else      an <= ~(8'b0000_0001 << sel);
     end
 
-    // ------------------------------------------------------------------
-    // Segment decoder  (digits 0-9 only, active-LOW)
-    // seg[6:0] = { CG, CF, CE, CD, CC, CB, CA }
-    // ------------------------------------------------------------------
+
     always @(posedge clk) begin
         if (!rst || show_blank) begin
             seg <= 7'b111_1111;
