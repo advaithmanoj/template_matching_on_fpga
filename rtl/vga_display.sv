@@ -1,32 +1,7 @@
 
 
 `timescale 1ns/1ps
-// =============================================================
-// vga_display.sv
-//   Displays the binary input image over VGA (640x480 @ 60 Hz)
-//   and overlays a 100x40 pixel bounding box at the match
-//   position (xpos, ypos) reported by processor_array.
-//
-// Inputs
-//   clk25   - 25.175 MHz VGA pixel clock
-//   sys_clk - system clock (domain of xpos/ypos from processor_array)
-//   rst     - active-low async reset
-//   xpos    - match top-left X, sys_clk domain (from processor_array)
-//   ypos    - match top-left Y, sys_clk domain (from processor_array)
-//
-// Outputs
-//   red/green/blue - 4-bit per channel to VGA DAC
-//   hsync / vsync  - VGA sync, negative polarity
-//
-// Pipeline (2 stages, aligned with ROM latency)
-//   Stage 0  hCounter/vCounter → address → rom_addr_r
-//            active/bbox detection → active_r / on_bbox_r
-//   Stage 1  ROM outputs pixel_data
-//            Pixel colour selected and registered to output
-//
-// Sync is also 2-stage registered (matches reference code style)
-// so sync and colour arrive at the output in the same clock cycle.
-// =============================================================
+
 
 module vga_display (
     input  wire        clk25,
@@ -42,9 +17,7 @@ module vga_display (
     output reg         vsync
 );
 
-    // ----------------------------------------------------------------
-    // VGA 640x480 @ 60 Hz timing (identical to reference)
-    // ----------------------------------------------------------------
+
     localparam H_DISPLAY = 640;
     localparam H_FRONT   = 16;
     localparam H_SYNC    = 96;
@@ -63,9 +36,7 @@ module vga_display (
     localparam TMPL_H = 100;
     localparam BOX_THICK = 2;   // border thickness in pixels
 
-    // ----------------------------------------------------------------
-    // Pixel counters
-    // ----------------------------------------------------------------
+   
     reg [9:0] hCounter = 10'd0;
     reg [9:0] vCounter = 10'd0;
 
@@ -78,13 +49,7 @@ module vga_display (
         end
     end
 
-    // ----------------------------------------------------------------
-    // CDC: 2-FF synchronizer for xpos/ypos (sys_clk → clk25)
-    //
-    // xpos/ypos change at most once per matched frame (~60 Hz).
-    // The synchronizer may glitch for one clk25 cycle on update;
-    // at 25 MHz this is invisible to the viewer.
-    // ----------------------------------------------------------------
+  
     reg [9:0] xpos_m = 10'd0, xpos_s = 10'd0;
     reg [9:0] ypos_m = 10'd0, ypos_s = 10'd0;
 
@@ -98,13 +63,7 @@ module vga_display (
         end
     end
 
-    // ----------------------------------------------------------------
-    // Stage 0: ROM address computation
-    //   pixel address = row * 640 + col
-    //   640 = 512 + 128 = 2^9 + 2^7  (shift-add, avoids DSP block)
-    //
-    //   During blanking the address is held at 0 (safe, not displayed).
-    // ----------------------------------------------------------------
+   
     wire active_now = (hCounter < H_DISPLAY) && (vCounter < V_DISPLAY);
 
     
@@ -131,17 +90,8 @@ module vga_display (
         .q       (pixel_data)
     );
 
-    // ----------------------------------------------------------------
-    // Stage 0: bounding box edge detection (combinatorial)
-    //
-    // Box top-left  : (xpos_s, ypos_s)
-    // Box bottom-right (inclusive): (xpos_s + TMPL_W - 1, ypos_s + TMPL_H - 1)
-    // Border drawn BOX_THICK pixels wide on all four sides.
-    //
-    // Note: if the box extends past the screen edge it clips naturally
-    // because active_r will be 0 for those pixels.
-    // ----------------------------------------------------------------
- // FIX (hCounter=col maps to ypos; vCounter=row maps to xpos):
+ 
+ //  (hCounter=col maps to ypos; vCounter=row maps to xpos):
 wire h_in_box = (hCounter >= ypos_s) && (hCounter < ypos_s + TMPL_W);
 wire v_in_box = (vCounter >= xpos_s) && (vCounter < xpos_s + TMPL_H);
 
@@ -153,10 +103,7 @@ wire v_in_box = (vCounter >= xpos_s) && (vCounter < xpos_s + TMPL_H);
                     && (vCounter < xpos_s + BOX_THICK);
     wire on_bot   = h_in_box && v_in_box
                     && (vCounter >= xpos_s + TMPL_H - BOX_THICK);
-    // BEFORE
-//wire on_bbox  = on_left | on_right | on_top | on_bot;
-
-// AFTER
+   
 wire on_bbox  = match_found & (on_left | on_right | on_top | on_bot);
 
     // Pipeline Stage 0 → Stage 1 (match 1-cycle ROM latency)
@@ -168,14 +115,12 @@ wire on_bbox  = match_found & (on_left | on_right | on_top | on_bot);
         on_bbox_r <= on_bbox;
     end
 
-    // ----------------------------------------------------------------
-    // Stage 1: pixel colour output (aligned with ROM data)
-    //
+    ]
     // Priority:  blank > bounding box border > image pixel
     //   Image 1 (white object) → R=F G=F B=F
     //   Image 0 (black bg)     → R=0 G=0 B=0
     //   Box border             → R=F G=0 B=0  (bright red)
-    // ----------------------------------------------------------------
+
     always @(posedge clk25) begin
         if (!active_r) begin
             red   <= 4'h0;
@@ -193,11 +138,7 @@ wire on_bbox  = match_found & (on_left | on_right | on_top | on_bot);
         end
     end
 
-    // ----------------------------------------------------------------
-    // Sync generation - 2-stage registered (matches reference style)
-    // Both active_r and sync arrive at outputs after 2 clock cycles,
-    // so colour and sync remain frame-aligned.
-    // ----------------------------------------------------------------
+ 
     reg hsync_reg = ~HSYNC_POL;
     reg vsync_reg = ~VSYNC_POL;
 
