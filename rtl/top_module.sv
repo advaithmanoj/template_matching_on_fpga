@@ -34,21 +34,13 @@ output wire [6:0]  seg,
 output wire led0,   // mmcm_locked  H17
 output wire led1   // match_found K15
 );         // 7-seg segments, active-LOW
-    
-//    module processor_array(clk, rst, ena, xpos, ypos);
 
-//    input clk;
-//    input rst;
-//    input ena;
-    
-//    output reg [9:0] xpos;
-//    output reg [9:0] ypos;
 
 wire [9:0] xpos2vga;
 wire [9:0] ypos2vga;
 wire match_found;
 
-// ADD THESE TWO LINES:
+
 wire mmcm_locked;
 wire rst_sync = rst & mmcm_locked;   // 0 until button released AND clock locked
 
@@ -78,7 +70,7 @@ processor_array instance1 (.clk(clk50),.rst(rst_sync),.ena(ena),.xpos(xpos2vga),
 
 vga_display vga_inst (
     .clk25   (clk25),          // 25 MHz pixel clock
-    .sys_clk (clk50),            // your system clock
+    .sys_clk (clk50),            // system clock
     .rst     (rst_sync),
     .xpos    (xpos2vga),           // from processor_array
     .ypos    (ypos2vga), // from processor_array
